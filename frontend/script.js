@@ -20,42 +20,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch initial tiles
     startGame();
+});
 
-    // Handle guess submission
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            if (guess.length > 0) {
-                submitGuess()
-            }
-        } else if (event.key === 'Backspace') {
-            if (guess.length > 0) {
-                const lastTileId = guess[guess.length - 1].id
-                guess = guess.slice(0, -1)
-                for (let i = tiles.length - 1; i >= 0; i--) {
-                    if (tiles[i].picked && tiles[i].id === lastTileId) {
-                        tiles[i].picked = false
-                        break
-                    }
-                }
-                renderGame()
-            }
-        } else if (event.key === ' ') {
-            getNewTiles()
-        } else {
-            letterPressed = event.key.toUpperCase()
-            let letterGotPicked = false
-            for (let i = 0; i < tiles.length; i++) {
-                if (String.fromCodePoint(tiles[i].letter) === letterPressed && !tiles[i].picked) {
-                    tiles[i].picked = true
-                    letterGotPicked = true
-                    guess.push(tiles[i])
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        if (guess.length > 0) {
+            submitGuess()
+        }
+    } else if (event.key === 'Backspace') {
+        if (guess.length > 0) {
+            const lastTileId = guess[guess.length - 1].id
+            guess = guess.slice(0, -1)
+            for (let i = tiles.length - 1; i >= 0; i--) {
+                if (tiles[i].picked && tiles[i].id === lastTileId) {
+                    tiles[i].picked = false
                     break
                 }
             }
-            if (letterGotPicked) 
-                renderGame()
+            renderGame()
         }
-    });
+    } else if (event.key === ' ') {
+        getNewTiles()
+    } else {
+        letterPressed = event.key.toUpperCase()
+        let letterGotPicked = false
+        for (let i = 0; i < tiles.length; i++) {
+            if (String.fromCodePoint(tiles[i].letter) === letterPressed && !tiles[i].picked) {
+                tiles[i].picked = true
+                letterGotPicked = true
+                guess.push(tiles[i])
+                break
+            }
+        }
+        if (letterGotPicked) 
+            renderGame()
+    }
+});
+
+window.addEventListener('beforeunload', (event) => {
+    endGame()
 });
 
 // Fetch tiles from the backend
@@ -160,10 +163,10 @@ const submitGuess = () => {
     .then(data => {
         if (!data['valid']) {
             titleContainer.innerHTML = '<h1>NICE TRY...</h1>'
-            titleContainer.querySelector('h1').style.backgroundColor = 'black';
+            titleContainer.querySelector('h1').style.backgroundColor = '#35654d';
         } else {
             titleContainer.innerHTML = '<h1>GOOD ONE!</h1>'
-            titleContainer.querySelector('h1').style.backgroundColor = 'green';
+            titleContainer.querySelector('h1').style.backgroundColor = '#35654d';
             guess = []
             tiles = data['tiles'].map((tile, index) => ({id: index, points: tile.Points, letter: tile.Letter, picked: false}));
             points = data['points']
