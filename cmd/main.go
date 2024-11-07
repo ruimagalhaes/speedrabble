@@ -49,5 +49,5 @@ func main() {
 	e.GET("/tiles", gameHandler.GetNewTiles)
 	e.GET("/end", gameHandler.EndGame)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8081"))
 }
