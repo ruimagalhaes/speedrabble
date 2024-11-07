@@ -1,3 +1,5 @@
+const BASE_URL = window.location.origin + '/speedrabble'
+
 let gameId;
 let tilesContainer;
 let guessContainer;
@@ -19,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     timerContainer = document.getElementById('timer')
 
     // Fetch initial tiles
+
+    console.log(BASE_URL)
     startGame();
 });
 
@@ -63,7 +67,7 @@ window.addEventListener('beforeunload', (event) => {
 
 // Fetch tiles from the backend
 const startGame = () => {
-    fetch('http://localhost:8080/start')
+    fetch(`${BASE_URL}/start`)
         .then(response => response.json())
         .then(data => {
             gameId = data['gameId']
@@ -76,7 +80,7 @@ const startGame = () => {
 }
 
 const getNewTiles = () => {
-    fetch(`http://localhost:8080/tiles?name=${gameId}`)
+    fetch(`${BASE_URL}/tiles?name=${gameId}`)
         .then(response => response.json())
         .then(data => {
             guess = []
@@ -152,7 +156,7 @@ const submitGuess = () => {
     guessToSend = guess.map(tile => String.fromCodePoint(tile.letter)).join('').toLowerCase()
     console.log(guessToSend)
     //send the gameId to identify the game too
-    fetch('http://localhost:8080/guess', {
+    fetch(`${BASE_URL}/guess`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -202,7 +206,7 @@ const updateTimerDisplay = () => {
 
 const endGame = () => {
     // Disable further gameplay
-    fetch(`http://localhost:8080/end?name=${gameId}`)
+    fetch(`${BASE_URL}/end?name=${gameId}`)
         .then(response => response.json())
         .then(data => {
             guess = []

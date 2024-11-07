@@ -34,9 +34,9 @@ func main() {
 	e.Static("/frontend", "./frontend")
 	e.Use(middleware.Logger())
 
-	e.File("/", "frontend/index.html")
-	e.File("/script.js", "frontend/script.js")
-	e.File("/style.css", "frontend/style.css")
+	e.File("/speedrabble", "frontend/index.html")
+	e.File("/speedrabble/script.js", "frontend/script.js")
+	e.File("/speedrabble/style.css", "frontend/style.css")
 
 	gameHandler := game.GameHandler{
 		CurrentGames: make(map[string]game.Game),
@@ -44,10 +44,10 @@ func main() {
 		NPlayTiles:   7,
 	}
 
-	e.GET("/start", gameHandler.StartGame)
-	e.POST("/guess", gameHandler.GuessWord)
-	e.GET("/tiles", gameHandler.GetNewTiles)
-	e.GET("/end", gameHandler.EndGame)
+	e.GET("/speedrabble/start", gameHandler.StartGame)
+	e.POST("/speedrabble/guess", gameHandler.GuessWord)
+	e.GET("/speedrabble/tiles", gameHandler.GetNewTiles)
+	e.GET("/speedrabble/end", gameHandler.EndGame)
 
 	e.Logger.Fatal(e.Start(":8081"))
 }
